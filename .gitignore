@@ -18,3 +18,13 @@ DerivedData/
 .swiftpm
 .netrc
 
+
+.DS_Store
+/.build
+/Packages
+/*.xcodeproj
+xcuserdata/
+DerivedData/
+.swiftpm
+.netrc
+
