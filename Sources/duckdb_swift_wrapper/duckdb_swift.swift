@@ -50,6 +50,7 @@ public final class Connection {
     }
     
     @available(macOS,introduced:12)
+    @available(iOS,introduced:15)
     public func execute(_ sql:String) throws -> DataFrame {
         return try Statement(self, sql).run()
     }
@@ -78,6 +79,7 @@ public final class Statement {
     }
     
     @available(macOS,introduced:12)
+    @available(iOS,introduced:15)
     static private func fill<T>( _ vec: UnsafeMutableRawPointer, _ count: Int, _ value_class: T.Type, _ out:inout AnyColumn ) {
         let data_ptr = duckdb_vector_get_data(vec).unsafelyUnwrapped
         let validity = duckdb_vector_get_validity(vec).unsafelyUnwrapped
@@ -99,6 +101,7 @@ public final class Statement {
     
     // TODO optionally take prepared statement parameters
     @available(macOS,introduced:12)
+    @available(iOS,introduced:15)
     public func run() throws -> DataFrame  {
         let execute_res = duckdb_execute_prepared(_stmt_handle, _res_handle)
         if (execute_res != DuckDBSuccess) {
