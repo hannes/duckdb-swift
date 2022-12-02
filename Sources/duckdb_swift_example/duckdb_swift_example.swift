@@ -3,6 +3,7 @@ import TabularData
 
 @main
 @available(macOS,introduced:12)
+@available(ios,introduced:15)
 
 public struct duckdb_swift_example {
 
