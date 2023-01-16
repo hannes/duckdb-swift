@@ -80,12 +80,12 @@ public final class Statement {
     
     @available(macOS,introduced:12)
     @available(iOS,introduced:15)
-    static private func fill<T>( _ vec: UnsafeMutableRawPointer, _ count: Int, _ value_class: T.Type, _ out:inout AnyColumn ) {
-        let data_ptr = duckdb_vector_get_data(vec).unsafelyUnwrapped
-        let validity = duckdb_vector_get_validity(vec).unsafelyUnwrapped
+    static private func fill<T>( _ vec: duckdb_vector?, _ count: Int, _ value_class: T.Type, _ out:inout AnyColumn ) {
+        let data_ptr = duckdb_vector_get_data(vec)
+        let validity = duckdb_vector_get_validity(vec)
         for offset in 0..<count {
             if (duckdb_validity_row_is_valid(validity, UInt64(offset))) {
-                out.append(data_ptr.load(fromByteOffset: offset * MemoryLayout<T>.size, as: value_class))
+                out.append(data_ptr.unsafelyUnwrapped.load(fromByteOffset: offset * MemoryLayout<T>.size, as: value_class))
             } else {
                 out.append(nil)
             }
@@ -151,7 +151,7 @@ public final class Statement {
             for chunk_idx in 0..<duckdb_result_chunk_count(_res_handle.pointee) {
                 var chunk = duckdb_result_get_chunk(_res_handle.pointee, chunk_idx)
                 let chunk_len = Int(duckdb_data_chunk_get_size(chunk))
-                let vec = duckdb_data_chunk_get_vector(chunk, col_idx).unsafelyUnwrapped
+                let vec = duckdb_data_chunk_get_vector(chunk, col_idx)
                 switch (duckdb_type) {
                 case DUCKDB_TYPE_BOOLEAN:
                     Statement.fill(vec, chunk_len, Bool.self, &res_col)
