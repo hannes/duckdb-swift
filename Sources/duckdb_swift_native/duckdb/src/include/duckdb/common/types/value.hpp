@@ -131,10 +131,6 @@ public:
 	                                  int32_t micros);
 	DUCKDB_API static Value INTERVAL(int32_t months, int32_t days, int64_t micros);
 	DUCKDB_API static Value INTERVAL(interval_t interval);
-	//! Creates a JSON Value
-	DUCKDB_API static Value JSON(const char *val);
-	DUCKDB_API static Value JSON(string_t val);
-	DUCKDB_API static Value JSON(string val);
 
 	// Create a enum Value from a specified uint value
 	DUCKDB_API static Value ENUM(uint64_t value, const LogicalType &original_type);
@@ -169,6 +165,9 @@ public:
 	}
 	//! Creates a blob by casting a specified string to a blob (i.e. interpreting \x characters)
 	DUCKDB_API static Value BLOB(const string &data);
+	//! Creates a bitstring by casting a specified string to a bitstring
+	DUCKDB_API static Value BIT(const_data_ptr_t data, idx_t len);
+	DUCKDB_API static Value BIT(const string &data);
 
 	template <class T>
 	T GetValue() const {

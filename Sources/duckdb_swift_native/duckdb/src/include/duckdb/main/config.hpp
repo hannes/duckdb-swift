@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "duckdb/common/enums/access_mode.hpp"
 #include "duckdb/common/allocator.hpp"
 #include "duckdb/common/case_insensitive_map.hpp"
 #include "duckdb/common/common.hpp"
@@ -23,7 +24,6 @@
 #include "duckdb/common/winapi.hpp"
 #include "duckdb/storage/compression/bitpacking.hpp"
 #include "duckdb/function/cast/default_casts.hpp"
-#include "duckdb/function/replacement_open.hpp"
 #include "duckdb/function/replacement_scan.hpp"
 #include "duckdb/function/create_database_extension.hpp"
 #include "duckdb/optimizer/optimizer_extension.hpp"
@@ -36,11 +36,11 @@ class ClientContext;
 class ErrorManager;
 class CompressionFunction;
 class TableFunctionRef;
+class OperatorExtension;
+class StorageExtension;
 
 struct CompressionFunctionSet;
 struct DBConfig;
-
-enum class AccessMode : uint8_t { UNDEFINED = 0, AUTOMATIC = 1, READ_ONLY = 2, READ_WRITE = 3 };
 
 enum class CheckpointAbort : uint8_t {
 	NO_ABORT = 0,
@@ -162,9 +162,6 @@ public:
 	//! Replacement table scans are automatically attempted when a table name cannot be found in the schema
 	vector<ReplacementScan> replacement_scans;
 
-	//! Replacement open handlers are callbacks that run pre and post database initialization
-	vector<ReplacementOpen> replacement_opens;
-
 	//! Extra parameters that can be SET for loaded extensions
 	case_insensitive_map_t<ExtensionOption> extension_parameters;
 	//! The FileSystem to use, can be overwritten to allow for injecting custom file systems for testing purposes (e.g.
@@ -184,6 +181,8 @@ public:
 	shared_ptr<Allocator> default_allocator;
 	//! Extensions made to binder
 	vector<std::unique_ptr<OperatorExtension>> operator_extensions;
+	//! Extensions made to storage
+	case_insensitive_map_t<std::unique_ptr<StorageExtension>> storage_extensions;
 	//! Extensions made to binder to implement the create_database functionality
 	vector<CreateDatabaseExtension> create_database_extensions;
 

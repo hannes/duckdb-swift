@@ -20,6 +20,7 @@
 #include "duckdb/common/types/null_value.hpp"
 #include "duckdb/common/types/time.hpp"
 #include "duckdb/common/types/timestamp.hpp"
+#include "duckdb/common/types/bit.hpp"
 #include "duckdb/common/types/vector.hpp"
 #include "duckdb/common/value_operations/value_operations.hpp"
 #include "duckdb/common/vector_operations/vector_operations.hpp"
@@ -613,21 +614,17 @@ Value Value::BLOB(const string &data) {
 	return result;
 }
 
-Value Value::JSON(const char *val) {
-	auto result = Value(val);
-	result.type_ = LogicalTypeId::JSON;
+Value Value::BIT(const_data_ptr_t data, idx_t len) {
+	Value result(LogicalType::BIT);
+	result.is_null = false;
+	result.str_value = string((const char *)data, len);
 	return result;
 }
 
-Value Value::JSON(string_t val) {
-	auto result = Value(val);
-	result.type_ = LogicalTypeId::JSON;
-	return result;
-}
-
-Value Value::JSON(string val) {
-	auto result = Value(std::move(val));
-	result.type_ = LogicalTypeId::JSON;
+Value Value::BIT(const string &data) {
+	Value result(LogicalType::BIT);
+	result.is_null = false;
+	result.str_value = Bit::ToBit(string_t(data));
 	return result;
 }
 
