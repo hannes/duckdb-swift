@@ -11,11 +11,11 @@ let package = Package(
     products: [
         .library(
             name: "duckdb_swift",
-            targets: ["duckdb_swift_wrapper", "duckdb_swift_native"]),
+            targets: ["duckdb_swift_wrapper", "Cduckdb"]),
     ],
     targets: [
         .target(
-           name: "duckdb_swift_native",
+           name: "Cduckdb",
            sources: ["duckdb/ub_src_catalog.cpp",
 "duckdb/ub_src_catalog_catalog_entry.cpp",
 "duckdb/ub_src_catalog_default.cpp",
@@ -220,7 +220,7 @@ let package = Package(
        ),
         .target(
             name: "duckdb_swift_wrapper",
-            dependencies: ["duckdb_swift_native"]),
+            dependencies: ["Cduckdb"]),
         .executableTarget(
             name: "duckdb_swift_example",
             dependencies: ["duckdb_swift_wrapper"]),

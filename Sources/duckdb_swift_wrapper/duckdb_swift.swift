@@ -1,4 +1,4 @@
-import duckdb_swift_native
+@_implementationOnly import Cduckdb
 import TabularData
 import Foundation
 
